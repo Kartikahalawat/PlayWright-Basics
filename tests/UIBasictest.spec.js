@@ -2,7 +2,7 @@ const {test} = require('@playwright/test');
 
 
 
-test('Browser Context Playwright test', async (browser)=>     //anonymous async function with (browser) a fixer (global variable)
+test('Browser Context Playwright test', async (browser)=>     //anonymous async function with (browser) a fixtures (global variable)
 {   
     //chrome - plugins/cookies
     const context = await browser.newContext();
@@ -12,9 +12,9 @@ test('Browser Context Playwright test', async (browser)=>     //anonymous async 
  
 });
 
-test('Page Playwright test', async (page)=>     //anonymous async function with (page) a fixer (global variable)
+test('Page Playwright test', async (page)=>     //anonymous async function with (page) a fixtures (global variable)
 {   
-    await page.goto("https://rahulshettyacademy.com/loginpagePractise/");
+    await page.goto("https://google.com");
 
 });
 
