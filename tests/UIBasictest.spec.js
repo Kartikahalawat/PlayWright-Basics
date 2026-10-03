@@ -1,6 +1,6 @@
 const { test, expect } = require('@playwright/test');
 
-test.only('Browser Context Playwright test', async ({ browser }) => {
+test('Browser Context Playwright test', async ({ browser }) => {
     // chrome - plugins/cookies
 
     const context = await browser.newContext();
@@ -10,12 +10,13 @@ test.only('Browser Context Playwright test', async ({ browser }) => {
     console.log(await page.title);
 
     const userName = page.locator('#username');
+    const userPass = page.locator("[type='password']");
     const signIn = page.locator("#signInBtn");
     const cardTitles = page.locator(".card-body a");
 
     //css, xpath
     await userName.fill("KartikAhalawat");
-    await page.locator("[type='password']").fill("Learning@830$3mK2");
+    await userPass.fill("Learning@830$3mK2");
     await signIn.click();
 
     //wait until this locator shown up page
@@ -38,4 +39,32 @@ test('Page Playwright test', async ({ page }) => {
     //get title
     console.log(await page.title());
     await expect(page).toHaveTitle("Google");
+});
+
+test.only('UI Controls', async ({page})=>
+{
+    await page.goto("https://rahulshettyacademy.com/loginpagePractise/");
+    const userName = page.locator('#username');
+    const userPass = page.locator("[type='password']");
+
+    await userName.fill("KartikAhalawat");
+    await userPass.fill("Learning@830$3mK2");
+
+    const dropdown = page.locator("select.form-control");
+    await dropdown.selectOption("consult");
+    await page.locator(".radiotextsty").last().click();
+    await page.locator("#okayBtn").click();
+    
+    console.log(page.locator(".radiotextsty").last().isChecked());
+    await expect(page.locator(".radiotextsty").last()).toBeChecked();
+    
+    await page.locator("#terms").click();
+    await expect(page.locator("#terms")).toBeChecked();
+
+    //Checking unchecked 
+    await page.locator("#terms").uncheck();
+    expect(await page.locator("#terms").isChecked()).toBeFalsy();
+    
+    // await page.pause();
+
 });
