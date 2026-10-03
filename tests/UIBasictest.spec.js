@@ -41,16 +41,18 @@ test('Page Playwright test', async ({ page }) => {
     await expect(page).toHaveTitle("Google");
 });
 
-test.only('UI Controls', async ({page})=>
+test('UI Controls', async ({page})=>
 {
     await page.goto("https://rahulshettyacademy.com/loginpagePractise/");
     const userName = page.locator('#username');
     const userPass = page.locator("[type='password']");
+    const dropdown = page.locator("select.form-control");
+    const documentLink = page.locator("[href*='documents-request']");
 
     await userName.fill("KartikAhalawat");
     await userPass.fill("Learning@830$3mK2");
 
-    const dropdown = page.locator("select.form-control");
+    
     await dropdown.selectOption("consult");
     await page.locator(".radiotextsty").last().click();
     await page.locator("#okayBtn").click();
@@ -64,7 +66,32 @@ test.only('UI Controls', async ({page})=>
     //Checking unchecked 
     await page.locator("#terms").uncheck();
     expect(await page.locator("#terms").isChecked()).toBeFalsy();
+
+    //Checking blinking text
+    await expect(documentLink).toHaveAttribute("class", "blinkingText");
     
     // await page.pause();
 
+});
+
+test.only('Child windows handl', async ({browser})=>
+{
+    const context = await browser.newContext();
+    const page = await context.newPage();
+    const userName = page.locator("#username");
+    await page.goto("https://rahulshettyacademy.com/loginpagePractise/");
+    const documentLink = page.locator("[href*='documents-request']");
+    
+    const [newPage] = await Promise.all(
+    [
+        context.waitForEvent('page'), //listen for any new page
+        documentLink.click()  //new page is opened
+    ])  //Driver will come out from this loop only after execution of all steps 
+
+    const text = await newPage.locator(".red").textContent();
+    const domain = text.split("@")[1].split(" ")[0];
+    console.log(domain);
+
+    await page.locator("#username").fill(domain);
+    console.log(await page.locator("#username").inputValue());
 });
